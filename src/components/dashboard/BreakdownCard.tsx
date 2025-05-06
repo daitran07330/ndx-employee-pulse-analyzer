@@ -24,7 +24,7 @@ const BreakdownCard = ({ data, className }: BreakdownCardProps) => {
               </div>
               <span className="font-medium">{data.breakdown.promoters}%</span>
             </div>
-            <Progress value={data.breakdown.promoters} className="h-2 bg-gray-200" indicatorClassName="bg-promoter" />
+            <Progress value={data.breakdown.promoters} className="h-2 bg-gray-200" />
             <div className="text-xs text-muted-foreground mt-1">Enthusiastic advocates</div>
           </div>
           
@@ -36,7 +36,7 @@ const BreakdownCard = ({ data, className }: BreakdownCardProps) => {
               </div>
               <span className="font-medium">{data.breakdown.passives}%</span>
             </div>
-            <Progress value={data.breakdown.passives} className="h-2 bg-gray-200" indicatorClassName="bg-passive" />
+            <Progress value={data.breakdown.passives} className="h-2 bg-gray-200" />
             <div className="text-xs text-muted-foreground mt-1">Satisfied but unenthusiastic</div>
           </div>
           
@@ -48,7 +48,7 @@ const BreakdownCard = ({ data, className }: BreakdownCardProps) => {
               </div>
               <span className="font-medium">{data.breakdown.detractors}%</span>
             </div>
-            <Progress value={data.breakdown.detractors} className="h-2 bg-gray-200" indicatorClassName="bg-detractor" />
+            <Progress value={data.breakdown.detractors} className="h-2 bg-gray-200" />
             <div className="text-xs text-muted-foreground mt-1">Unhappy employees</div>
           </div>
           

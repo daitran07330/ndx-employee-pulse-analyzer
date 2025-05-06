@@ -44,7 +44,7 @@ const DepartmentsCard = ({ data, className }: DepartmentsCardProps) => {
               tick={{ fontSize: 12 }}
             />
             <Tooltip 
-              formatter={(value, name) => [value > 0 ? `+${value}` : value, "eNPS Score"]} 
+              formatter={(value: any) => [(typeof value === 'number' && value > 0) ? `+${value}` : value, "eNPS Score"]} 
               labelFormatter={(label) => `Department: ${label}`}
             />
             <Legend />
@@ -53,7 +53,7 @@ const DepartmentsCard = ({ data, className }: DepartmentsCardProps) => {
               dataKey="score" 
               name="eNPS Score"
               radius={[0, 4, 4, 0]}
-              fill={(entry) => getScoreColor(entry.score)}
+              fill={(entry: any) => getScoreColor(entry.score)}
             />
           </BarChart>
         </ResponsiveContainer>
