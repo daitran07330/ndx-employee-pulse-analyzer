@@ -59,8 +59,8 @@ const DepartmentsCard: React.FC<{ data: DepartmentsData; className?: string }> =
               <Bar 
                 dataKey="score" 
                 barSize={30}
-                // This is the fix - use the fill property from each data point
-                fill={(entry) => entry.fill}
+                // Using a direct color attribute instead of a function
+                fill="#38B2AC"
                 radius={[0, 4, 4, 0]}
               >
                 <LabelList 

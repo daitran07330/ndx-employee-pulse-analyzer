@@ -33,7 +33,7 @@ export interface ThemeData {
 export interface Department {
   name: string;
   score: number;
-  responses: number;
+  responseCount: number;
 }
 
 export interface DepartmentData {

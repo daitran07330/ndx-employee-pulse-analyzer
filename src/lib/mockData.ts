@@ -49,17 +49,17 @@ export const themeData: ThemeData = {
   ],
 };
 
-// Simulated department data
+// Simulated department data - renamed responses to responseCount
 export const departmentData: DepartmentData = {
   departments: [
-    { name: "Lab Operations", score: -12, responses: 245 },
-    { name: "Customer Support", score: 5, responses: 98 },
-    { name: "Research & Development", score: 15, responses: 120 },
-    { name: "Sales & Marketing", score: -5, responses: 110 },
-    { name: "Finance & Accounting", score: -18, responses: 85 },
-    { name: "HR & Administration", score: 8, responses: 70 },
-    { name: "IT & Technical Support", score: -15, responses: 95 },
-    { name: "Executive Leadership", score: -30, responses: 42 },
-    { name: "Quality Assurance", score: -2, responses: 122 },
+    { name: "Lab Operations", score: -12, responseCount: 245 },
+    { name: "Customer Support", score: 5, responseCount: 98 },
+    { name: "Research & Development", score: 15, responseCount: 120 },
+    { name: "Sales & Marketing", score: -5, responseCount: 110 },
+    { name: "Finance & Accounting", score: -18, responseCount: 85 },
+    { name: "HR & Administration", score: 8, responseCount: 70 },
+    { name: "IT & Technical Support", score: -15, responseCount: 95 },
+    { name: "Executive Leadership", score: -30, responseCount: 42 },
+    { name: "Quality Assurance", score: -2, responseCount: 122 },
   ],
 };
