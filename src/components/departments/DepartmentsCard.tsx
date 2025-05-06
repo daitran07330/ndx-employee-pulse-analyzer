@@ -1,62 +1,80 @@
 
+import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { DepartmentData } from "@/lib/types";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ReferenceLine, ResponsiveContainer, Legend } from "recharts";
+import { Bar, BarChart, CartesianGrid, LabelList, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
-interface DepartmentsCardProps {
-  data: DepartmentData;
-  className?: string;
+interface DepartmentsData {
+  departments: Array<{
+    name: string;
+    score: number;
+    responseCount: number;
+  }>;
 }
 
-const DepartmentsCard = ({ data, className }: DepartmentsCardProps) => {
-  // Format departments for chart and sort by score
-  const sortedDepartments = [...data.departments]
-    .sort((a, b) => b.score - a.score);
+const DepartmentsCard: React.FC<{ data: DepartmentsData; className?: string }> = ({ 
+  data, 
+  className = "" 
+}) => {
+  // Sort departments by score
+  const sortedDepartments = [...data.departments].sort((a, b) => b.score - a.score);
 
-  // Get color based on score
-  const getScoreColor = (score: number) => {
-    if (score >= 0) return "#38B2AC"; // promoter color
-    return "#E53E3E"; // detractor color
-  };
+  // Format data for chart
+  const chartData = sortedDepartments.map(dept => ({
+    name: dept.name,
+    score: dept.score,
+    responseCount: dept.responseCount,
+    fill: dept.score >= 0 ? "#38B2AC" : "#E53E3E"
+  }));
 
   return (
-    <Card className={`${className} animate-fade-in`}>
-      <CardHeader className="pb-2">
+    <Card className={className}>
+      <CardHeader>
         <CardTitle className="text-xl">Department eNPS Scores</CardTitle>
       </CardHeader>
-      <CardContent className="h-[500px]">
-        <ResponsiveContainer width="100%" height="100%">
-          <BarChart
-            data={sortedDepartments}
-            layout="vertical"
-            margin={{ top: 20, right: 30, left: 150, bottom: 5 }}
-          >
-            <CartesianGrid strokeDasharray="3 3" horizontal={false} />
-            <XAxis 
-              type="number"
-              domain={[-40, 40]} 
-              tickCount={9}
-            />
-            <YAxis 
-              type="category" 
-              dataKey="name" 
-              width={150}
-              tick={{ fontSize: 12 }}
-            />
-            <Tooltip 
-              formatter={(value: any) => [(typeof value === 'number' && value > 0) ? `+${value}` : value, "eNPS Score"]} 
-              labelFormatter={(label) => `Department: ${label}`}
-            />
-            <Legend />
-            <ReferenceLine x={0} stroke="#666" />
-            <Bar 
-              dataKey="score" 
-              name="eNPS Score"
-              radius={[0, 4, 4, 0]}
-              fill={(entry: any) => getScoreColor(entry.score)}
-            />
-          </BarChart>
-        </ResponsiveContainer>
+      <CardContent>
+        <div className="h-[500px]">
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart
+              data={chartData}
+              layout="vertical"
+              margin={{ top: 20, right: 30, left: 30, bottom: 10 }}
+            >
+              <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} />
+              <XAxis
+                type="number"
+                domain={[-100, 100]}
+                tickCount={5}
+              />
+              <YAxis
+                dataKey="name"
+                type="category"
+                width={100}
+                tickLine={false}
+                axisLine={false}
+              />
+              <Tooltip
+                formatter={(value: number) => [`${value}`, 'eNPS Score']}
+                labelStyle={{ fontWeight: 'bold' }}
+              />
+              <Bar 
+                dataKey="score" 
+                barSize={30}
+                // This is the fix - use the fill property from each data point
+                fill={(entry) => entry.fill}
+                radius={[0, 4, 4, 0]}
+              >
+                <LabelList 
+                  dataKey="score" 
+                  position="right"
+                  formatter={(value: number) => `${value > 0 ? '+' : ''}${value}`}
+                />
+              </Bar>
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+        <div className="mt-4 text-sm text-muted-foreground">
+          <p>Based on {data.departments.reduce((sum, dept) => sum + dept.responseCount, 0)} responses across {data.departments.length} departments.</p>
+        </div>
       </CardContent>
     </Card>
   );
