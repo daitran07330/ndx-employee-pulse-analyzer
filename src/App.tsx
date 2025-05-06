@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import SurveyHome from "./pages/SurveyHome";
 import NotFound from "./pages/NotFound";
 import Dashboard from "./pages/Dashboard";
+import SurveyForm from "./pages/SurveyForm";
 
 const queryClient = new QueryClient();
 
@@ -18,6 +19,7 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<SurveyHome />} />
+          <Route path="/survey-form" element={<SurveyForm />} />
           <Route path="/dashboard" element={<Dashboard />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
