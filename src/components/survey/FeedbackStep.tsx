@@ -25,12 +25,12 @@ const FeedbackStep = ({ form }: FeedbackStepProps) => {
                 Why did you rate us {form.getValues("recommendScore") || "..."}/10?
               </FormLabel>
               <FormDescription className="text-sm mb-4">
-                Please share your thoughts and select relevant themes below
+                Please share your thoughts and select relevant themes from the right panel
               </FormDescription>
               <FormControl>
                 <Textarea
                   placeholder="Your feedback helps us improve..."
-                  className="min-h-[100px] resize-none border-muted bg-background/50 focus:bg-background"
+                  className="min-h-[150px] resize-none border-muted bg-background/50 focus:bg-background"
                   {...field}
                 />
               </FormControl>

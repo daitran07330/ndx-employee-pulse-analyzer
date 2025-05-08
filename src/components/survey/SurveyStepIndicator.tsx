@@ -24,7 +24,7 @@ const SurveyStepIndicator = ({
       <div className="absolute top-4 left-0 w-full h-1 bg-muted">
         <div 
           className="absolute left-0 h-1 bg-primary transition-all duration-500" 
-          style={{ width: `${(completedSteps.length / 4) * 100}%` }}
+          style={{ width: `${(completedSteps.length / steps.length) * 100}%` }}
         />
       </div>
       

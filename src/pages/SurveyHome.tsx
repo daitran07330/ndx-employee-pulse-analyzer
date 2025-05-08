@@ -12,7 +12,6 @@ import { Progress } from "@/components/ui/progress";
 import { Check } from "lucide-react";
 import SurveyStepIndicator from "@/components/survey/SurveyStepIndicator";
 import AboutENPS from "@/components/survey/AboutENPS";
-import PrivacyInfo from "@/components/survey/PrivacyInfo";
 import RecommendationStep from "@/components/survey/RecommendationStep";
 import FeedbackStep from "@/components/survey/FeedbackStep";
 import ManagerScoreStep from "@/components/survey/ManagerScoreStep";
@@ -45,51 +44,31 @@ const SurveyHome = () => {
 
   // Track form field changes to update progress
   useEffect(() => {
-    const subscription = form.watch((value, { name, type }) => {
-      if (!name || !type) return;
+    const subscription = form.watch((value) => {
+      const newCompletedSteps = [];
       
-      if (name === "recommendScore" && value.recommendScore) {
-        updateCompletedSteps(1);
+      if (value.recommendScore) {
+        newCompletedSteps.push(1);
       }
       
-      if (name === "reasonComment" && value.reasonComment && value.reasonComment.length >= 10) {
-        updateCompletedSteps(2);
-      } else if (name === "reasonComment" && (!value.reasonComment || value.reasonComment.length < 10)) {
-        removeFromCompletedSteps(2);
+      if (value.reasonComment && value.reasonComment.length >= 10) {
+        newCompletedSteps.push(2);
       }
       
-      if (name === "managerScore" && value.managerScore) {
-        updateCompletedSteps(3);
+      if (value.managerScore) {
+        newCompletedSteps.push(3);
       }
       
-      if (name === "satisfactionTrend" && value.satisfactionTrend) {
-        updateCompletedSteps(4);
+      if (value.satisfactionTrend) {
+        newCompletedSteps.push(4);
       }
+      
+      setCompletedSteps(newCompletedSteps.sort((a, b) => a - b));
     });
     
     return () => subscription.unsubscribe();
   }, [form.watch]);
 
-  // Helper functions for tracking completed steps
-  const updateCompletedSteps = (step: number) => {
-    if (!completedSteps.includes(step)) {
-      setCompletedSteps(prev => [...prev, step].sort((a, b) => a - b));
-    }
-  };
-  
-  const removeFromCompletedSteps = (step: number) => {
-    setCompletedSteps(prev => prev.filter(s => s !== step));
-  };
-  
-  // Submit handler
-  function onSubmit(data: FormValues) {
-    console.log("Form submitted:", data);
-    toast.success("Survey submitted successfully!", {
-      description: "Thank you for your feedback.",
-    });
-    setIsSubmitted(true);
-  }
-  
   // Click on progress indicator to focus on a section
   const handleStepClick = (step: number) => {
     setCurrentStep(step);
@@ -102,6 +81,15 @@ const SurveyHome = () => {
     }
   };
   
+  // Submit handler
+  function onSubmit(data: FormValues) {
+    console.log("Form submitted:", data);
+    toast.success("Survey submitted successfully!", {
+      description: "Thank you for your feedback.",
+    });
+    setIsSubmitted(true);
+  }
+  
   // Calculate progress percentage
   const progressPercentage = (completedSteps.length / 4) * 100;
   const allStepsCompleted = completedSteps.length === 4;
@@ -110,7 +98,7 @@ const SurveyHome = () => {
     <div className="min-h-screen bg-gradient-to-b from-background to-secondary/10">
       <ModernHeader />
       
-      <main className="container py-6 max-w-5xl mx-auto">
+      <main className="container py-6 max-w-7xl mx-auto">
         {isSubmitted ? (
           <ThankYouCard />
         ) : (
@@ -128,15 +116,9 @@ const SurveyHome = () => {
               />
             </div>
             
-            <div className="grid md:grid-cols-4 gap-6">
-              {/* Left sidebar with information */}
-              <aside className="md:col-span-1 space-y-4">
-                <AboutENPS />
-                <PrivacyInfo />
-              </aside>
-              
-              {/* Main content area */}
-              <div className="md:col-span-3">
+            <div className="grid md:grid-cols-3 gap-6">
+              {/* Main content area (moved to the left) */}
+              <div className="md:col-span-2">
                 <Form {...form}>
                   <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                     {/* All survey sections are always visible */}
@@ -150,28 +132,8 @@ const SurveyHome = () => {
                     </section>
                     
                     <section id="survey-section-2" className="scroll-mt-28">
-                      <h2 className="text-xl font-semibold mb-4">2. Feedback & Themes</h2>
-                      <div className="space-y-4">
-                        <FeedbackStep form={form} />
-                        
-                        <div className="grid md:grid-cols-2 gap-4">
-                          <Card className="bg-white border shadow-sm">
-                            <ThemeTags 
-                              form={form} 
-                              themes={positiveThemes} 
-                              type="positive" 
-                            />
-                          </Card>
-                          
-                          <Card className="bg-white border shadow-sm">
-                            <ThemeTags 
-                              form={form} 
-                              themes={negativeThemes} 
-                              type="negative" 
-                            />
-                          </Card>
-                        </div>
-                      </div>
+                      <h2 className="text-xl font-semibold mb-4">2. Feedback</h2>
+                      <FeedbackStep form={form} />
                     </section>
                     
                     <section id="survey-section-3" className="scroll-mt-28">
@@ -220,6 +182,35 @@ const SurveyHome = () => {
                   </form>
                 </Form>
               </div>
+              
+              {/* Right sidebar with theme tags and information (moved from left to right) */}
+              <aside className="space-y-4">
+                <Card className="bg-white border shadow-sm">
+                  <div className="p-4 border-b">
+                    <h2 className="font-semibold">Feedback Themes</h2>
+                  </div>
+                  <div className="divide-y">
+                    <div className="p-4">
+                      <ThemeTags 
+                        form={form} 
+                        themes={positiveThemes} 
+                        type="positive" 
+                      />
+                    </div>
+                    
+                    <div className="p-4">
+                      <ThemeTags 
+                        form={form} 
+                        themes={negativeThemes} 
+                        type="negative" 
+                      />
+                    </div>
+                  </div>
+                </Card>
+                
+                {/* About eNPS moved under the hashtags */}
+                <AboutENPS />
+              </aside>
             </div>
           </div>
         )}
