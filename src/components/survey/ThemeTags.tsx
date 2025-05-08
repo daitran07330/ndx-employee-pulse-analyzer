@@ -28,8 +28,11 @@ const ThemeTags = ({ form, themes, type }: ThemeTagsProps) => {
     }
   };
 
-  const onDragStart = (e: React.DragEvent, tagId: string) => {
+  const onDragStart = (e: React.DragEvent, tagId: string, tagText: string) => {
     e.dataTransfer.setData("tagId", tagId);
+    e.dataTransfer.setData("tagText", tagText);
+    e.dataTransfer.setData("text/plain", tagText);
+    e.dataTransfer.effectAllowed = "copy";
   };
 
   const onDrop = (e: React.DragEvent) => {
@@ -67,7 +70,7 @@ const ThemeTags = ({ form, themes, type }: ThemeTagsProps) => {
               }`}
               onClick={() => handleTagToggle(theme.id)}
               draggable
-              onDragStart={(e) => onDragStart(e, theme.id)}
+              onDragStart={(e) => onDragStart(e, theme.id, theme.text)}
             >
               <span className="text-muted-foreground mr-1 opacity-70">#</span>
               {theme.text}
