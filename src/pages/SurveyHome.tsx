@@ -8,12 +8,13 @@ import SurveyLayout from "@/components/survey/SurveyLayout";
 import SurveyFormContainer from "@/components/survey/SurveyFormContainer";
 import SurveySidebar from "@/components/survey/SurveySidebar";
 import ThankYouCard from "@/components/survey/ThankYouCard";
+import { Form } from "@/components/ui/form";
 
 const SurveyHome = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   
-  // Initialize form for passing to sidebar
-  const form = useForm({
+  // Initialize form with proper types
+  const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       recommendScore: "",
@@ -37,17 +38,22 @@ const SurveyHome = () => {
             <p className="text-muted-foreground">Your feedback helps us improve NDX</p>
           </div>
           
-          <div className="grid md:grid-cols-3 gap-6">
-            {/* Main content area (moved to the left) */}
-            <div className="md:col-span-2">
-              <SurveyFormContainer onSubmitSuccess={() => setIsSubmitted(true)} />
+          <Form {...form}>
+            <div className="grid md:grid-cols-3 gap-6">
+              {/* Main content area (moved to the left) */}
+              <div className="md:col-span-2">
+                <SurveyFormContainer 
+                  form={form} 
+                  onSubmitSuccess={() => setIsSubmitted(true)} 
+                />
+              </div>
+              
+              {/* Right sidebar with theme tags and information */}
+              <div className="md:col-span-1">
+                <SurveySidebar form={form} />
+              </div>
             </div>
-            
-            {/* Right sidebar with theme tags and information */}
-            <div className="md:col-span-1">
-              <SurveySidebar form={form} />
-            </div>
-          </div>
+          </Form>
         </div>
       )}
     </SurveyLayout>

@@ -1,9 +1,5 @@
 
 import ModernHeader from "@/components/layout/ModernHeader";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { formSchema } from "@/lib/surveySchema";
 
 interface SurveyLayoutProps {
   children: React.ReactNode;
