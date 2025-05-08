@@ -13,7 +13,7 @@ const ThankYouCard = () => {
           </div>
           <h2 className="text-3xl font-semibold mb-4">Thank You!</h2>
           <p className="text-lg mb-8 text-muted-foreground">
-            Your feedback has been submitted successfully and will help us improve NDX.
+            Your feedback has been submitted successfully and will help us improve DADL.
           </p>
           <Button asChild size="lg" className="px-8">
             <a href="/dashboard">View Results Dashboard</a>

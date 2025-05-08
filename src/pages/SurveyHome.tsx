@@ -35,7 +35,7 @@ const SurveyHome = () => {
         <div className="space-y-6">
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold tracking-tight mb-2">Employee Pulse Survey</h1>
-            <p className="text-muted-foreground">Your feedback helps us improve NDX</p>
+            <p className="text-muted-foreground">Your feedback helps us improve DADL</p>
           </div>
           
           <Form {...form}>
