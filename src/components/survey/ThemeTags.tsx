@@ -6,7 +6,7 @@ import { FormField, FormItem, FormLabel, FormDescription } from "@/components/ui
 import { UseFormReturn } from "react-hook-form";
 import { z } from "zod";
 import { formSchema } from "@/lib/surveySchema";
-import { grip } from "lucide-react";
+import { GripVertical } from "lucide-react";
 
 type FormValues = z.infer<typeof formSchema>;
 
@@ -55,7 +55,7 @@ const ThemeTags = ({ form, themes, type }: ThemeTagsProps) => {
             {type === "positive" ? "Positive Themes" : "Negative Themes"}
           </FormLabel>
           <FormDescription>
-            Drag tags to the selected area or click to select themes that resonate with your experience
+            Select themes that resonate with your experience
           </FormDescription>
           
           <div className="mt-2 space-y-4">
@@ -82,15 +82,15 @@ const ThemeTags = ({ form, themes, type }: ThemeTagsProps) => {
             </div>
             
             <div 
-              className={`mt-4 p-4 border-2 border-dashed rounded-md min-h-[100px] flex flex-wrap gap-2 ${
+              className={`mt-4 p-4 border-2 border-dashed rounded-md min-h-[80px] flex flex-wrap gap-2 ${
                 type === "positive" ? "border-green-300" : "border-red-300"
               }`}
               onDrop={onDrop}
               onDragOver={onDragOver}
             >
               {selectedTags.length === 0 ? (
-                <div className="w-full text-center text-muted-foreground p-4">
-                  Drop tags here or click tags above to select them
+                <div className="w-full text-center text-muted-foreground p-2">
+                  Drag tags here or click to select
                 </div>
               ) : (
                 selectedTags.map((tagId) => {

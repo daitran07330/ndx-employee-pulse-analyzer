@@ -14,24 +14,23 @@ interface FeedbackStepProps {
 
 const FeedbackStep = ({ form }: FeedbackStepProps) => {
   return (
-    <Card className="border-0 shadow-lg overflow-hidden animate-fade-in bg-white/90 backdrop-blur-sm">
-      <CardContent className="pt-6 p-8">
+    <Card className="border shadow-sm rounded-lg bg-white">
+      <CardContent className="p-6">
         <FormField
           control={form.control}
           name="reasonComment"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-xl font-semibold block mb-1">
-                Based on your rating of {form.getValues("recommendScore") || "..."}/10, please share why
+              <FormLabel className="text-lg font-medium mb-1">
+                Why did you rate us {form.getValues("recommendScore") || "..."}/10?
               </FormLabel>
               <FormDescription className="text-sm mb-4">
-                What are the primary reasons behind your score? Your detailed feedback helps us improve.
-                You can also select theme tags below to highlight specific areas.
+                Please share your thoughts and select relevant themes below
               </FormDescription>
               <FormControl>
                 <Textarea
-                  placeholder="Please share your thoughts here..."
-                  className="min-h-[120px] resize-none border-muted bg-background/50 focus:bg-background transition-colors"
+                  placeholder="Your feedback helps us improve..."
+                  className="min-h-[100px] resize-none border-muted bg-background/50 focus:bg-background"
                   {...field}
                 />
               </FormControl>

@@ -8,6 +8,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { toast } from "sonner";
+import { Progress } from "@/components/ui/progress";
 import { Check } from "lucide-react";
 import SurveyStepIndicator from "@/components/survey/SurveyStepIndicator";
 import AboutENPS from "@/components/survey/AboutENPS";
@@ -74,10 +75,6 @@ const SurveyHome = () => {
     if (!completedSteps.includes(step)) {
       setCompletedSteps(prev => [...prev, step].sort((a, b) => a - b));
     }
-    
-    if (currentStep === step) {
-      setCurrentStep(step < 4 ? step + 1 : step);
-    }
   };
   
   const removeFromCompletedSteps = (step: number) => {
@@ -110,114 +107,125 @@ const SurveyHome = () => {
   const allStepsCompleted = completedSteps.length === 4;
   
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-secondary/20">
+    <div className="min-h-screen bg-gradient-to-b from-background to-secondary/10">
       <ModernHeader />
-      <main className="container py-8 max-w-5xl mx-auto">
+      
+      <main className="container py-6 max-w-5xl mx-auto">
         {isSubmitted ? (
           <ThankYouCard />
         ) : (
-          <div className="grid md:grid-cols-5 gap-8">
-            {/* Left column with about eNPS */}
-            <div className="md:col-span-2 space-y-6">
-              <div className="animate-fade-in sticky top-24">
-                <h1 className="text-3xl font-bold tracking-tight mb-2">Employee Pulse Survey</h1>
-                <p className="text-muted-foreground">Your feedback helps us improve NDX</p>
-                
-                <div className="mt-8 mb-8">
-                  <SurveyStepIndicator 
-                    currentStep={currentStep} 
-                    completedSteps={completedSteps}
-                    onStepClick={handleStepClick}
-                  />
-                </div>
-                
+          <div className="space-y-6">
+            <div className="text-center mb-8">
+              <h1 className="text-3xl font-bold tracking-tight mb-2">Employee Pulse Survey</h1>
+              <p className="text-muted-foreground">Your feedback helps us improve NDX</p>
+            </div>
+            
+            <div className="max-w-3xl mx-auto mb-4">
+              <SurveyStepIndicator 
+                currentStep={currentStep} 
+                completedSteps={completedSteps}
+                onStepClick={handleStepClick}
+              />
+            </div>
+            
+            <div className="grid md:grid-cols-4 gap-6">
+              {/* Left sidebar with information */}
+              <aside className="md:col-span-1 space-y-4">
                 <AboutENPS />
                 <PrivacyInfo />
-              </div>
-            </div>
-
-            {/* Right column with survey form */}
-            <div className="md:col-span-3">
-              <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-10">
-                  {/* Step 1: Recommendation Score */}
-                  <div id="survey-section-1" className="scroll-mt-28">
-                    <RecommendationStep 
-                      form={form}
-                      hoverScore={hoverScore}
-                      setHoverScore={setHoverScore}
-                    />
-                  </div>
-
-                  {/* Step 2: Reason Comment and Theme Tags */}
-                  <div id="survey-section-2" className="scroll-mt-28 space-y-6">
-                    <FeedbackStep form={form} />
-                    
-                    <div className="grid md:grid-cols-2 gap-6">
-                      <Card className="border-0 shadow-lg overflow-hidden animate-fade-in bg-white/90 backdrop-blur-sm">
-                        <ThemeTags 
-                          form={form} 
-                          themes={positiveThemes} 
-                          type="positive" 
-                        />
-                      </Card>
-                      
-                      <Card className="border-0 shadow-lg overflow-hidden animate-fade-in bg-white/90 backdrop-blur-sm">
-                        <ThemeTags 
-                          form={form} 
-                          themes={negativeThemes} 
-                          type="negative" 
-                        />
-                      </Card>
-                    </div>
-                  </div>
-
-                  {/* Step 3: Manager Score */}
-                  <div id="survey-section-3" className="scroll-mt-28">
-                    <ManagerScoreStep 
-                      form={form}
-                      hoverScore={hoverScore}
-                      setHoverScore={setHoverScore}
-                    />
-                  </div>
-
-                  {/* Step 4: Satisfaction Trend */}
-                  <div id="survey-section-4" className="scroll-mt-28">
-                    <SatisfactionTrendStep form={form} />
-                  </div>
-
-                  <div className="sticky bottom-6 bg-white/90 backdrop-blur-sm p-4 rounded-lg shadow-lg border">
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="text-sm font-medium">
-                        Survey Completion: {Math.round(progressPercentage)}%
-                      </div>
-                      <div className="text-sm text-muted-foreground">
-                        {completedSteps.length}/4 questions answered
-                      </div>
-                    </div>
-                    <div className="w-full bg-muted h-2 rounded-full overflow-hidden mb-4">
-                      <div 
-                        className="bg-primary h-full transition-all duration-500" 
-                        style={{ width: `${progressPercentage}%` }}
+              </aside>
+              
+              {/* Main content area */}
+              <div className="md:col-span-3">
+                <Form {...form}>
+                  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                    {/* All survey sections are always visible */}
+                    <section id="survey-section-1" className="scroll-mt-28">
+                      <h2 className="text-xl font-semibold mb-4">1. Recommendation Score</h2>
+                      <RecommendationStep 
+                        form={form}
+                        hoverScore={hoverScore}
+                        setHoverScore={setHoverScore}
                       />
+                    </section>
+                    
+                    <section id="survey-section-2" className="scroll-mt-28">
+                      <h2 className="text-xl font-semibold mb-4">2. Feedback & Themes</h2>
+                      <div className="space-y-4">
+                        <FeedbackStep form={form} />
+                        
+                        <div className="grid md:grid-cols-2 gap-4">
+                          <Card className="bg-white border shadow-sm">
+                            <ThemeTags 
+                              form={form} 
+                              themes={positiveThemes} 
+                              type="positive" 
+                            />
+                          </Card>
+                          
+                          <Card className="bg-white border shadow-sm">
+                            <ThemeTags 
+                              form={form} 
+                              themes={negativeThemes} 
+                              type="negative" 
+                            />
+                          </Card>
+                        </div>
+                      </div>
+                    </section>
+                    
+                    <section id="survey-section-3" className="scroll-mt-28">
+                      <h2 className="text-xl font-semibold mb-4">3. Manager Feedback</h2>
+                      <ManagerScoreStep 
+                        form={form}
+                        hoverScore={hoverScore}
+                        setHoverScore={setHoverScore}
+                      />
+                    </section>
+                    
+                    <section id="survey-section-4" className="scroll-mt-28">
+                      <h2 className="text-xl font-semibold mb-4">4. Satisfaction Trend</h2>
+                      <SatisfactionTrendStep form={form} />
+                    </section>
+                    
+                    {/* Sticky submit section */}
+                    <div className="sticky bottom-6 pt-4">
+                      <Card className="bg-white/95 backdrop-blur shadow-lg border p-4">
+                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                          <div className="space-y-2 flex-1">
+                            <div className="flex justify-between text-sm">
+                              <span className="font-medium">Survey Completion</span>
+                              <span className="text-muted-foreground">{completedSteps.length}/4 questions</span>
+                            </div>
+                            <Progress value={progressPercentage} className="h-2" />
+                          </div>
+                          
+                          <Button 
+                            type="submit" 
+                            disabled={!allStepsCompleted}
+                            className="w-full md:w-auto"
+                          >
+                            {allStepsCompleted ? (
+                              <span className="flex items-center gap-2">
+                                <Check className="h-4 w-4" />
+                                Submit Survey
+                              </span>
+                            ) : (
+                              "Please Complete All Questions"
+                            )}
+                          </Button>
+                        </div>
+                      </Card>
                     </div>
-                    <div className="flex justify-end">
-                      <Button 
-                        type="submit" 
-                        disabled={!allStepsCompleted}
-                        className="px-8"
-                      >
-                        {allStepsCompleted ? "Submit Survey" : "Please Complete All Questions"}
-                      </Button>
-                    </div>
-                  </div>
-                </form>
-              </Form>
+                  </form>
+                </Form>
+              </div>
             </div>
           </div>
         )}
       </main>
-      <footer className="py-5 border-t border-border">
+      
+      <footer className="py-4 border-t border-border mt-8">
         <div className="container text-center text-xs text-muted-foreground">
           <p>© 2025 NDX Employee Pulse Analyzer</p>
         </div>

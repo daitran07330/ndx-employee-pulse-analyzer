@@ -12,54 +12,57 @@ const SurveyStepIndicator = ({
   completedSteps = [], 
   onStepClick 
 }: SurveyStepIndicatorProps) => {
+  const steps = [
+    { id: 1, label: "Recommend" },
+    { id: 2, label: "Feedback" },
+    { id: 3, label: "Manager" },
+    { id: 4, label: "Satisfaction" }
+  ];
+
   return (
-    <div className="relative">
-      <div className="absolute left-0 w-full h-1 bg-muted">
+    <div className="relative pb-6">
+      <div className="absolute top-4 left-0 w-full h-1 bg-muted">
         <div 
           className="absolute left-0 h-1 bg-primary transition-all duration-500" 
           style={{ width: `${(completedSteps.length / 4) * 100}%` }}
         />
       </div>
-      <div className="flex justify-between pt-3">
-        {[1, 2, 3, 4].map(step => {
-          const isCompleted = completedSteps.includes(step);
-          const isActive = currentStep === step;
+      
+      <div className="flex justify-between">
+        {steps.map(step => {
+          const isCompleted = completedSteps.includes(step.id);
+          const isActive = currentStep === step.id;
           
           return (
-            <div 
-              key={step} 
-              className="relative"
-              role="button"
-              onClick={() => onStepClick?.(step)}
+            <button
+              key={step.id}
+              className="flex flex-col items-center pt-0 focus:outline-none"
+              onClick={() => onStepClick?.(step.id)}
+              type="button"
             >
               <div 
                 className={cn(
-                  "w-8 h-8 rounded-full flex items-center justify-center text-xs font-medium transition-all cursor-pointer",
+                  "w-8 h-8 rounded-full flex items-center justify-center text-xs font-medium border-2 transition-all",
                   isCompleted 
-                    ? "bg-primary text-primary-foreground" 
+                    ? "bg-primary border-primary text-primary-foreground" 
                     : isActive 
-                      ? "bg-primary/20 text-primary ring-2 ring-primary" 
-                      : "bg-muted text-muted-foreground hover:bg-muted/80"
+                      ? "bg-white border-primary text-primary" 
+                      : "bg-white border-muted text-muted-foreground"
                 )}
               >
-                {step}
+                {isCompleted ? "✓" : step.id}
               </div>
-              <div 
+              <span 
                 className={cn(
-                  "absolute -bottom-6 left-1/2 -translate-x-1/2 text-xs font-medium whitespace-nowrap",
-                  isCompleted 
+                  "text-xs font-medium mt-1",
+                  isCompleted || isActive
                     ? "text-primary" 
-                    : isActive 
-                      ? "text-primary" 
-                      : "text-muted-foreground"
+                    : "text-muted-foreground"
                 )}
               >
-                {step === 1 && "Recommend"}
-                {step === 2 && "Feedback"}
-                {step === 3 && "Manager"}
-                {step === 4 && "Satisfaction"}
-              </div>
-            </div>
+                {step.label}
+              </span>
+            </button>
           );
         })}
       </div>
