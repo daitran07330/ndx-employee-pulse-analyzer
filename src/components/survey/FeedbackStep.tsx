@@ -22,15 +22,16 @@ const FeedbackStep = ({ form }: FeedbackStepProps) => {
           render={({ field }) => (
             <FormItem>
               <FormLabel className="text-xl font-semibold block mb-1">
-                Based on your rating of {form.getValues("recommendScore")}/10, please share why
+                Based on your rating of {form.getValues("recommendScore") || "..."}/10, please share why
               </FormLabel>
               <FormDescription className="text-sm mb-4">
                 What are the primary reasons behind your score? Your detailed feedback helps us improve.
+                You can also select theme tags below to highlight specific areas.
               </FormDescription>
               <FormControl>
                 <Textarea
                   placeholder="Please share your thoughts here..."
-                  className="min-h-[200px] resize-none border-muted bg-background/50 focus:bg-background transition-colors"
+                  className="min-h-[120px] resize-none border-muted bg-background/50 focus:bg-background transition-colors"
                   {...field}
                 />
               </FormControl>
