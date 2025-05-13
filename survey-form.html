@@ -1,0 +1,445 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Employee Pulse Survey</title>
+  <link rel="stylesheet" href="survey-form.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header-title">NDX Pulse Survey</div>
+  </header>
+
+  <main class="container">
+    <div class="survey-title">
+      <h1>Employee Pulse Survey</h1>
+      <p>Your feedback helps us improve DADL</p>
+    </div>
+
+    <form id="survey-form">
+      <!-- Step indicator -->
+      <div class="step-indicator">
+        <div class="step-indicator-line"></div>
+        <div class="step-indicator-progress" style="width: 0%"></div>
+        <div class="step-indicator-steps">
+          <div class="step-indicator-step">
+            <div class="step-indicator-circle active" data-step="1">1</div>
+            <span class="step-indicator-label active">Recommend</span>
+          </div>
+          <div class="step-indicator-step">
+            <div class="step-indicator-circle" data-step="2">2</div>
+            <span class="step-indicator-label">Feedback</span>
+          </div>
+          <div class="step-indicator-step">
+            <div class="step-indicator-circle" data-step="3">3</div>
+            <span class="step-indicator-label">Manager</span>
+          </div>
+          <div class="step-indicator-step">
+            <div class="step-indicator-circle" data-step="4">4</div>
+            <span class="step-indicator-label">Satisfaction</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 1: Recommendation Score -->
+      <section id="survey-section-1" class="scroll-mt-28">
+        <h2 class="section-title">1. Recommendation Score</h2>
+        <div class="card animate-fade-in">
+          <div class="card-content">
+            <div class="form-group">
+              <label class="form-label">
+                How likely are you to recommend NDX as a great place to work?
+              </label>
+              <p class="form-description">
+                On a scale from 0 to 10, where 0 is not at all likely and 10 is extremely likely
+              </p>
+              
+              <div class="score-grid">
+                <div class="score-item">
+                  <button type="button" class="score-button" data-value="0">0</button>
+                  <span class="score-label">Not likely</span>
+                </div>
+                <div class="score-item">
+                  <button type="button" class="score-button" data-value="1">1</button>
+                </div>
+                <div class="score-item">
+                  <button type="button" class="score-button" data-value="2">2</button>
+                </div>
+                <div class="score-item">
+                  <button type="button" class="score-button" data-value="3">3</button>
+                </div>
+                <div class="score-item">
+                  <button type="button" class="score-button" data-value="4">4</button>
+                </div>
+                <div class="score-item">
+                  <button type="button" class="score-button" data-value="5">5</button>
+                </div>
+                <div class="score-item">
+                  <button type="button" class="score-button" data-value="6">6</button>
+                </div>
+                <div class="score-item">
+                  <button type="button" class="score-button" data-value="7">7</button>
+                </div>
+                <div class="score-item">
+                  <button type="button" class="score-button" data-value="8">8</button>
+                </div>
+                <div class="score-item">
+                  <button type="button" class="score-button" data-value="9">9</button>
+                </div>
+                <div class="score-item">
+                  <button type="button" class="score-button" data-value="10">10</button>
+                  <span class="score-label">Very likely</span>
+                </div>
+              </div>
+              
+              <div id="score-result-display" style="display: none; text-align: center; margin-top: 1.5rem;">
+                <div class="score-result">Score: <span id="score-value"></span>/10</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Step 2: Feedback -->
+      <section id="survey-section-2" class="scroll-mt-28">
+        <h2 class="section-title">2. Feedback</h2>
+        <div class="card">
+          <div class="card-content">
+            <div class="form-group">
+              <label class="form-label">
+                Why did you rate us <span id="selected-score">...</span>/10?
+              </label>
+              <p class="form-description">
+                Please share your thoughts about your experience at NDX
+              </p>
+              <div class="form-control">
+                <textarea 
+                  id="feedback-textarea"
+                  class="textarea" 
+                  placeholder="Your feedback helps us improve..."
+                  rows="6"
+                ></textarea>
+              </div>
+              <div class="char-counter">
+                <span id="char-count">0</span> characters 
+                (minimum 10 required)
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Step 3: Manager Feedback -->
+      <section id="survey-section-3" class="scroll-mt-28">
+        <h2 class="section-title">3. Manager Feedback</h2>
+        <div class="card">
+          <div class="card-content">
+            <div class="form-group">
+              <label class="form-label">
+                Do you feel valued and heard by your direct manager at NDX?
+              </label>
+              <p class="form-description">
+                On a scale from 0 to 10, where 0 is not at all valued and 10 is highly valued
+              </p>
+              
+              <div class="score-grid">
+                <div class="score-item">
+                  <button type="button" class="score-button" data-type="manager" data-value="0">0</button>
+                  <span class="score-label">Not valued</span>
+                </div>
+                <div class="score-item">
+                  <button type="button" class="score-button" data-type="manager" data-value="1">1</button>
+                </div>
+                <div class="score-item">
+                  <button type="button" class="score-button" data-type="manager" data-value="2">2</button>
+                </div>
+                <div class="score-item">
+                  <button type="button" class="score-button" data-type="manager" data-value="3">3</button>
+                </div>
+                <div class="score-item">
+                  <button type="button" class="score-button" data-type="manager" data-value="4">4</button>
+                </div>
+                <div class="score-item">
+                  <button type="button" class="score-button" data-type="manager" data-value="5">5</button>
+                </div>
+                <div class="score-item">
+                  <button type="button" class="score-button" data-type="manager" data-value="6">6</button>
+                </div>
+                <div class="score-item">
+                  <button type="button" class="score-button" data-type="manager" data-value="7">7</button>
+                </div>
+                <div class="score-item">
+                  <button type="button" class="score-button" data-type="manager" data-value="8">8</button>
+                </div>
+                <div class="score-item">
+                  <button type="button" class="score-button" data-type="manager" data-value="9">9</button>
+                </div>
+                <div class="score-item">
+                  <button type="button" class="score-button" data-type="manager" data-value="10">10</button>
+                  <span class="score-label">Highly valued</span>
+                </div>
+              </div>
+              
+              <div id="manager-score-result" style="display: none; text-align: center; margin-top: 1.5rem;">
+                <div class="score-result">Score: <span id="manager-score-value"></span>/10</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Step 4: Satisfaction Trend -->
+      <section id="survey-section-4" class="scroll-mt-28">
+        <h2 class="section-title">4. Satisfaction Trend</h2>
+        <div class="card">
+          <div class="card-content">
+            <div class="form-group">
+              <label class="form-label">
+                My satisfaction with my job at NDX in the last six months is...
+              </label>
+              <p class="form-description">
+                Please select the option that best reflects your job satisfaction trend
+              </p>
+              
+              <div class="radio-group">
+                <div class="radio-item">
+                  <input type="radio" id="trend-increasing" name="satisfactionTrend" value="increasing" class="radio-input">
+                  <div>
+                    <label for="trend-increasing" class="radio-label">Increasing</label>
+                    <p class="radio-description">My job satisfaction has been improving over the last six months</p>
+                  </div>
+                </div>
+                
+                <div class="radio-item">
+                  <input type="radio" id="trend-steady" name="satisfactionTrend" value="steady" class="radio-input">
+                  <div>
+                    <label for="trend-steady" class="radio-label">Steady/about the same</label>
+                    <p class="radio-description">My job satisfaction has remained about the same over the last six months</p>
+                  </div>
+                </div>
+                
+                <div class="radio-item">
+                  <input type="radio" id="trend-declining" name="satisfactionTrend" value="declining" class="radio-input">
+                  <div>
+                    <label for="trend-declining" class="radio-label">Declining</label>
+                    <p class="radio-description">My job satisfaction has been declining over the last six months</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Submit Bar -->
+      <div class="submit-bar">
+        <div class="submit-card">
+          <div class="submit-content">
+            <div class="progress-container">
+              <div class="progress-header">
+                <span class="progress-label">Survey Completion</span>
+                <span class="progress-count"><span id="completed-count">0</span>/4 questions</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-value" style="transform: translateX(-100%)"></div>
+              </div>
+            </div>
+            
+            <button type="button" id="submit-button" class="button button-primary" disabled>
+              Please Complete All Questions
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <p>© 2025 NDX Employee Pulse Analyzer</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Variables to track form progress
+      let completedSteps = [];
+      let currentStep = 1;
+      
+      // Values
+      let recommendScore = null;
+      let feedbackText = '';
+      let managerScore = null;
+      let satisfactionTrend = null;
+      
+      // DOM elements
+      const progressValue = document.querySelector('.progress-value');
+      const completedCount = document.getElementById('completed-count');
+      const submitButton = document.getElementById('submit-button');
+      const scoreButtons = document.querySelectorAll('.score-button[data-value]');
+      const managerButtons = document.querySelectorAll('.score-button[data-type="manager"]');
+      const feedbackTextarea = document.getElementById('feedback-textarea');
+      const charCount = document.getElementById('char-count');
+      const trendRadios = document.querySelectorAll('input[name="satisfactionTrend"]');
+      const selectedScore = document.getElementById('selected-score');
+      
+      // Event Listeners
+      scoreButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          const value = this.dataset.value;
+          recommendScore = value;
+          
+          // Update UI
+          scoreButtons.forEach(btn => btn.classList.remove('selected'));
+          this.classList.add('selected');
+          
+          // Show score result
+          document.getElementById('score-result-display').style.display = 'block';
+          document.getElementById('score-value').textContent = value;
+          selectedScore.textContent = value;
+          
+          // Update progress
+          updateStepCompletion(1, true);
+        });
+      });
+      
+      managerButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          const value = this.dataset.value;
+          managerScore = value;
+          
+          // Update UI
+          managerButtons.forEach(btn => btn.classList.remove('selected'));
+          this.classList.add('selected');
+          
+          // Show score result
+          document.getElementById('manager-score-result').style.display = 'block';
+          document.getElementById('manager-score-value').textContent = value;
+          
+          // Update progress
+          updateStepCompletion(3, true);
+        });
+      });
+      
+      feedbackTextarea.addEventListener('input', function() {
+        feedbackText = this.value;
+        charCount.textContent = feedbackText.length;
+        
+        // Update progress if text length is sufficient
+        updateStepCompletion(2, feedbackText.length >= 10);
+      });
+      
+      trendRadios.forEach(radio => {
+        radio.addEventListener('change', function() {
+          satisfactionTrend = this.value;
+          
+          // Update progress
+          updateStepCompletion(4, true);
+        });
+      });
+      
+      // Step indicator buttons
+      const stepButtons = document.querySelectorAll('.step-indicator-circle');
+      stepButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          const step = parseInt(this.dataset.step);
+          currentStep = step;
+          
+          // Scroll to the section
+          const sectionId = `survey-section-${step}`;
+          document.getElementById(sectionId).scrollIntoView({ behavior: 'smooth' });
+          
+          // Update active state
+          updateActiveStep();
+        });
+      });
+      
+      // Submit button
+      submitButton.addEventListener('click', function() {
+        if (completedSteps.length === 4) {
+          alert('Survey submitted successfully! Thank you for your feedback.');
+          // In a real application, you would submit the data to a server here
+        }
+      });
+      
+      // Functions
+      function updateStepCompletion(step, isComplete) {
+        if (isComplete) {
+          if (!completedSteps.includes(step)) {
+            completedSteps.push(step);
+            completedSteps.sort((a, b) => a - b);
+          }
+        } else {
+          completedSteps = completedSteps.filter(s => s !== step);
+        }
+        
+        // Update progress bar and count
+        const progressPercentage = (completedSteps.length / 4) * 100;
+        progressValue.style.transform = `translateX(-${100 - progressPercentage}%)`;
+        completedCount.textContent = completedSteps.length;
+        
+        // Update step indicators
+        updateStepIndicators();
+        
+        // Update submit button
+        if (completedSteps.length === 4) {
+          submitButton.disabled = false;
+          submitButton.innerHTML = '<span class="button-icon">✓</span> Submit Survey';
+        } else {
+          submitButton.disabled = true;
+          submitButton.textContent = 'Please Complete All Questions';
+        }
+      }
+      
+      function updateStepIndicators() {
+        stepButtons.forEach(button => {
+          const step = parseInt(button.dataset.step);
+          const isCompleted = completedSteps.includes(step);
+          
+          // Update button appearance
+          if (isCompleted) {
+            button.classList.add('completed');
+            button.classList.remove('active');
+            button.innerHTML = '✓';
+          } else if (step === currentStep) {
+            button.classList.add('active');
+            button.classList.remove('completed');
+            button.innerHTML = step;
+          } else {
+            button.classList.remove('active', 'completed');
+            button.innerHTML = step;
+          }
+          
+          // Update labels
+          const label = button.nextElementSibling;
+          if (isCompleted || step === currentStep) {
+            label.classList.add('active');
+          } else {
+            label.classList.remove('active');
+          }
+        });
+      }
+      
+      function updateActiveStep() {
+        stepButtons.forEach(button => {
+          const step = parseInt(button.dataset.step);
+          
+          if (!completedSteps.includes(step)) {
+            if (step === currentStep) {
+              button.classList.add('active');
+              button.nextElementSibling.classList.add('active');
+            } else {
+              button.classList.remove('active');
+              button.nextElementSibling.classList.remove('active');
+            }
+          }
+        });
+      }
+    });
+  </script>
+</body>
+</html>
