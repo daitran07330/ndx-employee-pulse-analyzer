@@ -1,0 +1,129 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>What is eNPS?</title>
+  <link rel="stylesheet" href="enps-info.css">
+</head>
+<body>
+  <div class="card">
+    <div class="card-content">
+      <div class="header-container">
+        <h2 class="title">
+          <i class="icon-info"></i>
+          What is eNPS?
+        </h2>
+        <button id="translate-btn" class="translate-button">
+          <i class="icon-translate"></i>
+          Translate
+        </button>
+      </div>
+
+      <p class="description">
+        Employee Net Promoter Score measures loyalty by asking how likely you would recommend 
+        NDX as a workplace. Scores range from -100 to +100.
+      </p>
+      
+      <div class="categories">
+        <div class="category promoters">
+          <span class="category-title">
+            <i class="icon-thumbs-up"></i>
+            Promoters (9-10)
+          </span>
+          <span class="category-description">
+            Enthusiastic employees who promote the company
+          </span>
+        </div>
+        
+        <div class="category passives">
+          <span class="category-title">
+            <span class="spacer"></span>
+            Passives (7-8)
+          </span>
+          <span class="category-description">
+            Satisfied but not committed employees
+          </span>
+        </div>
+        
+        <div class="category detractors">
+          <span class="category-title">
+            <i class="icon-thumbs-down"></i>
+            Detractors (0-6)
+          </span>
+          <span class="category-description">
+            Unhappy employees who may speak negatively
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const translateBtn = document.getElementById('translate-btn');
+      const originalText = {
+        title: "What is eNPS?",
+        description: "Employee Net Promoter Score measures loyalty by asking how likely you would recommend NDX as a workplace. Scores range from -100 to +100.",
+        promoters: "Promoters (9-10)",
+        promotersDesc: "Enthusiastic employees who promote the company",
+        passives: "Passives (7-8)",
+        passivesDesc: "Satisfied but not committed employees",
+        detractors: "Detractors (0-6)",
+        detractorsDesc: "Unhappy employees who may speak negatively"
+      };
+      
+      const translatedText = {
+        title: "eNPS là gì?",
+        description: "Điểm Khuyến nghị Nhân viên đo lường lòng trung thành bằng cách hỏi khả năng bạn sẽ giới thiệu NDX như một nơi làm việc. Điểm số từ -100 đến +100.",
+        promoters: "Người ủng hộ (9-10)",
+        promotersDesc: "Nhân viên nhiệt tình quảng bá công ty",
+        passives: "Người thụ động (7-8)",
+        passivesDesc: "Nhân viên hài lòng nhưng không cam kết",
+        detractors: "Người chỉ trích (0-6)",
+        detractorsDesc: "Nhân viên không hài lòng, có thể nói xấu"
+      };
+      
+      let isTranslated = false;
+      
+      translateBtn.addEventListener('click', function() {
+        const title = document.querySelector('.title');
+        const description = document.querySelector('.description');
+        const promotersTitle = document.querySelector('.promoters .category-title');
+        const promotersDesc = document.querySelector('.promoters .category-description');
+        const passivesTitle = document.querySelector('.passives .category-title');
+        const passivesDesc = document.querySelector('.passives .category-description');
+        const detractorsTitle = document.querySelector('.detractors .category-title');
+        const detractorsDesc = document.querySelector('.detractors .category-description');
+        
+        if (isTranslated) {
+          // Switch back to English
+          title.innerHTML = '<i class="icon-info"></i> ' + originalText.title;
+          description.textContent = originalText.description;
+          promotersTitle.innerHTML = '<i class="icon-thumbs-up"></i> ' + originalText.promoters;
+          promotersDesc.textContent = originalText.promotersDesc;
+          passivesTitle.innerHTML = '<span class="spacer"></span> ' + originalText.passives;
+          passivesDesc.textContent = originalText.passivesDesc;
+          detractorsTitle.innerHTML = '<i class="icon-thumbs-down"></i> ' + originalText.detractors;
+          detractorsDesc.textContent = originalText.detractorsDesc;
+          translateBtn.textContent = "Translate";
+        } else {
+          // Switch to Vietnamese
+          title.innerHTML = '<i class="icon-info"></i> ' + translatedText.title;
+          description.textContent = translatedText.description;
+          promotersTitle.innerHTML = '<i class="icon-thumbs-up"></i> ' + translatedText.promoters;
+          promotersDesc.textContent = translatedText.promotersDesc;
+          passivesTitle.innerHTML = '<span class="spacer"></span> ' + translatedText.passives;
+          passivesDesc.textContent = translatedText.passivesDesc;
+          detractorsTitle.innerHTML = '<i class="icon-thumbs-down"></i> ' + translatedText.detractors;
+          detractorsDesc.textContent = translatedText.detractorsDesc;
+          translateBtn.textContent = "English";
+        }
+        
+        isTranslated = !isTranslated;
+      });
+    });
+  </script>
+</body>
+</html>
