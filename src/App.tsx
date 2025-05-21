@@ -8,6 +8,7 @@ import SurveyHome from "./pages/SurveyHome";
 import NotFound from "./pages/NotFound";
 import Dashboard from "./pages/Dashboard";
 import SurveyForm from "./pages/SurveyForm";
+import EmployeeList from "./pages/EmployeeList";
 
 const queryClient = new QueryClient();
 
@@ -21,6 +22,7 @@ const App = () => (
           <Route path="/" element={<SurveyHome />} />
           <Route path="/survey-form" element={<SurveyForm />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/employees" element={<EmployeeList />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
