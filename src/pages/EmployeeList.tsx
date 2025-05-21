@@ -4,8 +4,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { PieChart, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Legend } from "recharts";
-import { Search, Users, PieChart as PieChartIcon, BarChart as BarChartIcon } from "lucide-react";
+import { Search, Users, PieChart as PieChartIcon, Filter } from "lucide-react";
 import PageTitle from "@/components/layout/PageTitle";
 
 // Define types for our data structures
@@ -37,6 +38,13 @@ const EmployeeList: React.FC = () => {
     completed: 0,
     incomplete: 0,
     completionRate: 0
+  });
+  
+  // Filter states
+  const [activeFilters, setActiveFilters] = useState({
+    department: "",
+    status: "", // "completed" or "pending"
+    position: ""
   });
 
   useEffect(() => {
@@ -82,19 +90,40 @@ const EmployeeList: React.FC = () => {
   }, []);
 
   useEffect(() => {
+    // Apply both search and filters
+    let result = [...employees];
+    
+    // Apply search
     if (searchQuery) {
-      const filtered = employees.filter(emp => 
+      result = result.filter(emp => 
         emp.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
         emp.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
         emp.department.toLowerCase().includes(searchQuery.toLowerCase()) ||
         emp.subDepartment.toLowerCase().includes(searchQuery.toLowerCase()) ||
         emp.position.toLowerCase().includes(searchQuery.toLowerCase())
       );
-      setFilteredEmployees(filtered);
-    } else {
-      setFilteredEmployees(employees);
     }
-  }, [searchQuery, employees]);
+    
+    // Apply department filter
+    if (activeFilters.department) {
+      result = result.filter(emp => emp.department === activeFilters.department);
+    }
+    
+    // Apply status filter
+    if (activeFilters.status) {
+      result = result.filter(emp => 
+        (activeFilters.status === "completed" && emp.completed) || 
+        (activeFilters.status === "pending" && !emp.completed)
+      );
+    }
+    
+    // Apply position filter
+    if (activeFilters.position) {
+      result = result.filter(emp => emp.position === activeFilters.position);
+    }
+    
+    setFilteredEmployees(result);
+  }, [searchQuery, employees, activeFilters]);
 
   const calculateStats = (employeeList: Employee[]) => {
     // Calculate overall statistics
@@ -145,6 +174,28 @@ const EmployeeList: React.FC = () => {
     setDepartmentStats(deptStats);
   };
   
+  // Get unique departments, positions for filters
+  const uniqueDepartments = Array.from(new Set(employees.map(emp => emp.department)));
+  const uniquePositions = Array.from(new Set(employees.map(emp => emp.position)));
+  
+  // Helper to handle filter clicks
+  const toggleFilter = (type: 'department' | 'status' | 'position', value: string) => {
+    setActiveFilters(prev => ({
+      ...prev,
+      [type]: prev[type] === value ? "" : value
+    }));
+  };
+  
+  // Reset all filters
+  const resetFilters = () => {
+    setActiveFilters({
+      department: "",
+      status: "",
+      position: ""
+    });
+    setSearchQuery("");
+  };
+  
   // Colors for the charts
   const COLORS = ['#4CAF50', '#F44336'];
 
@@ -155,8 +206,8 @@ const EmployeeList: React.FC = () => {
         description="Track and analyze survey completion status across departments"
       />
       
-      {/* Overview Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      {/* Overview Stats - Simplified to 3 cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">Total Employees</CardTitle>
@@ -189,49 +240,10 @@ const EmployeeList: React.FC = () => {
             <p className="text-xs text-muted-foreground">Surveys not yet completed</p>
           </CardContent>
         </Card>
-        
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Completion Rate</CardTitle>
-            <PieChartIcon className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{totalStats.completionRate}%</div>
-            <div className="w-full bg-gray-200 rounded-full h-2.5">
-              <div 
-                className="bg-promoter h-2.5 rounded-full" 
-                style={{ width: `${totalStats.completionRate}%` }}
-              ></div>
-            </div>
-          </CardContent>
-        </Card>
       </div>
       
-      {/* Charts Row */}
+      {/* Main Content Area - Combined Chart and Department Progress */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-        {/* Department Completion Chart */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-lg">Departmental Completion Rates</CardTitle>
-            <CardDescription>Survey completion status by department</CardDescription>
-          </CardHeader>
-          <CardContent className="h-80">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart
-                data={departmentStats}
-                layout="vertical"
-                margin={{ top: 5, right: 30, left: 80, bottom: 5 }}
-              >
-                <XAxis type="number" domain={[0, 100]} tickFormatter={(value) => `${value}%`} />
-                <YAxis type="category" dataKey="name" width={80} />
-                <Tooltip formatter={(value) => [`${value}%`, 'Completion Rate']} />
-                <Legend />
-                <Bar dataKey="completionRate" name="Completion Rate" fill="#4CAF50" />
-              </BarChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
-        
         {/* Overall Completion Pie Chart */}
         <Card>
           <CardHeader>
@@ -265,40 +277,32 @@ const EmployeeList: React.FC = () => {
             </ResponsiveContainer>
           </CardContent>
         </Card>
+        
+        {/* Departments Progress */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-lg">Department Progress</CardTitle>
+            <CardDescription>Survey completion status by department</CardDescription>
+          </CardHeader>
+          <CardContent className="h-80">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart
+                data={departmentStats}
+                layout="vertical"
+                margin={{ top: 5, right: 30, left: 80, bottom: 5 }}
+              >
+                <XAxis type="number" domain={[0, 100]} tickFormatter={(value) => `${value}%`} />
+                <YAxis type="category" dataKey="name" width={80} />
+                <Tooltip formatter={(value) => [`${value}%`, 'Completion Rate']} />
+                <Legend />
+                <Bar dataKey="completionRate" name="Completion Rate" fill="#4CAF50" />
+              </BarChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
       </div>
       
-      {/* Departments with Lowest Completion */}
-      <Card className="mb-6">
-        <CardHeader>
-          <CardTitle className="text-lg">Departments Needing Attention</CardTitle>
-          <CardDescription>Departments with lowest completion rates</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {departmentStats.slice(0, 3).map((dept) => (
-              <Card key={dept.name} className="bg-muted/50">
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-base">{dept.name}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex justify-between mb-1">
-                    <span className="text-sm">{dept.completionRate}% Complete</span>
-                    <span className="text-sm font-medium">{dept.completed}/{dept.total}</span>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div 
-                      className="bg-promoter h-2 rounded-full" 
-                      style={{ width: `${dept.completionRate}%` }}
-                    ></div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-      
-      {/* Employee List */}
+      {/* Employee List with Filters */}
       <Card>
         <CardHeader>
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -320,6 +324,85 @@ const EmployeeList: React.FC = () => {
           </div>
         </CardHeader>
         <CardContent>
+          {/* Filter Section */}
+          <div className="mb-4 border rounded-md p-4 bg-muted/30">
+            <div className="flex flex-wrap items-center gap-2 mb-2">
+              <div className="flex items-center gap-1.5">
+                <Filter className="h-4 w-4" />
+                <span className="text-sm font-medium">Filters:</span>
+              </div>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={resetFilters}
+                className="ml-auto"
+              >
+                Reset
+              </Button>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {/* Department Filter */}
+              <div>
+                <h4 className="text-sm font-medium mb-2">Department</h4>
+                <div className="flex flex-wrap gap-1">
+                  {uniqueDepartments.slice(0, 5).map(dept => (
+                    <Badge 
+                      key={dept}
+                      variant={activeFilters.department === dept ? "default" : "outline"} 
+                      className="cursor-pointer"
+                      onClick={() => toggleFilter('department', dept)}
+                    >
+                      {dept}
+                    </Badge>
+                  ))}
+                  {uniqueDepartments.length > 5 && (
+                    <Badge variant="secondary">+{uniqueDepartments.length - 5} more</Badge>
+                  )}
+                </div>
+              </div>
+              
+              {/* Position Filter */}
+              <div>
+                <h4 className="text-sm font-medium mb-2">Position</h4>
+                <div className="flex flex-wrap gap-1">
+                  {uniquePositions.map(position => (
+                    <Badge 
+                      key={position}
+                      variant={activeFilters.position === position ? "default" : "outline"} 
+                      className="cursor-pointer"
+                      onClick={() => toggleFilter('position', position)}
+                    >
+                      {position}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+              
+              {/* Status Filter */}
+              <div>
+                <h4 className="text-sm font-medium mb-2">Status</h4>
+                <div className="flex flex-wrap gap-1">
+                  <Badge 
+                    variant={activeFilters.status === "completed" ? "default" : "outline"} 
+                    className="cursor-pointer bg-green-100 text-green-800 hover:bg-green-200 hover:text-green-800"
+                    onClick={() => toggleFilter('status', 'completed')}
+                  >
+                    Completed
+                  </Badge>
+                  <Badge 
+                    variant={activeFilters.status === "pending" ? "default" : "outline"} 
+                    className="cursor-pointer bg-red-100 text-red-800 hover:bg-red-200 hover:text-red-800"
+                    onClick={() => toggleFilter('status', 'pending')}
+                  >
+                    Pending
+                  </Badge>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          {/* Employee Table */}
           <div className="rounded-md border">
             <Table>
               <TableHeader>
@@ -349,11 +432,18 @@ const EmployeeList: React.FC = () => {
                     </TableCell>
                   </TableRow>
                 ))}
+                {filteredEmployees.length === 0 && (
+                  <TableRow>
+                    <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
+                      No employees match the selected filters
+                    </TableCell>
+                  </TableRow>
+                )}
               </TableBody>
             </Table>
             {filteredEmployees.length > 10 && (
               <div className="flex items-center justify-center p-4 text-sm text-muted-foreground">
-                Showing 10 of {filteredEmployees.length} employees. Export to view all.
+                Showing 10 of {filteredEmployees.length} employees
               </div>
             )}
           </div>
