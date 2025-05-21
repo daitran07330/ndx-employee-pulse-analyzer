@@ -6,7 +6,7 @@ import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from "@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { PieChart, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Legend } from "recharts";
-import { Search, Users, PieChart as PieChartIcon, Filter } from "lucide-react";
+import { Search, Users, Filter } from "lucide-react";
 import PageTitle from "@/components/layout/PageTitle";
 
 // Define types for our data structures
@@ -46,6 +46,9 @@ const EmployeeList: React.FC = () => {
     status: "", // "completed" or "pending"
     position: ""
   });
+
+  // Position options based on selected department
+  const [availablePositions, setAvailablePositions] = useState<string[]>([]);
 
   useEffect(() => {
     // This would be replaced with an API call in a real application
@@ -107,6 +110,21 @@ const EmployeeList: React.FC = () => {
     // Apply department filter
     if (activeFilters.department) {
       result = result.filter(emp => emp.department === activeFilters.department);
+      
+      // Update available positions based on selected department
+      const positionsInDepartment = Array.from(
+        new Set(result.map(emp => emp.position))
+      );
+      setAvailablePositions(positionsInDepartment);
+      
+      // Reset position filter if the selected position is not in the new department
+      if (activeFilters.position && !positionsInDepartment.includes(activeFilters.position)) {
+        setActiveFilters(prev => ({...prev, position: ""}));
+      }
+    } else {
+      // If no department is selected, show all positions
+      const allPositions = Array.from(new Set(employees.map(emp => emp.position)));
+      setAvailablePositions(allPositions);
     }
     
     // Apply status filter
@@ -174,9 +192,8 @@ const EmployeeList: React.FC = () => {
     setDepartmentStats(deptStats);
   };
   
-  // Get unique departments, positions for filters
+  // Get unique departments for filters
   const uniqueDepartments = Array.from(new Set(employees.map(emp => emp.department)));
-  const uniquePositions = Array.from(new Set(employees.map(emp => emp.position)));
   
   // Helper to handle filter clicks
   const toggleFilter = (type: 'department' | 'status' | 'position', value: string) => {
@@ -323,10 +340,11 @@ const EmployeeList: React.FC = () => {
             </div>
           </div>
         </CardHeader>
+        
         <CardContent>
-          {/* Filter Section */}
+          {/* Filter Section - Two rows of horizontal menus */}
           <div className="mb-4 border rounded-md p-4 bg-muted/30">
-            <div className="flex flex-wrap items-center gap-2 mb-2">
+            <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-1.5">
                 <Filter className="h-4 w-4" />
                 <span className="text-sm font-medium">Filters:</span>
@@ -335,38 +353,35 @@ const EmployeeList: React.FC = () => {
                 variant="outline" 
                 size="sm" 
                 onClick={resetFilters}
-                className="ml-auto"
               >
                 Reset
               </Button>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {/* Department Filter */}
-              <div>
-                <h4 className="text-sm font-medium mb-2">Department</h4>
-                <div className="flex flex-wrap gap-1">
-                  {uniqueDepartments.slice(0, 5).map(dept => (
-                    <Badge 
-                      key={dept}
-                      variant={activeFilters.department === dept ? "default" : "outline"} 
-                      className="cursor-pointer"
-                      onClick={() => toggleFilter('department', dept)}
-                    >
-                      {dept}
-                    </Badge>
-                  ))}
-                  {uniqueDepartments.length > 5 && (
-                    <Badge variant="secondary">+{uniqueDepartments.length - 5} more</Badge>
-                  )}
-                </div>
+            {/* First row - Department filter */}
+            <div className="mb-3">
+              <h4 className="text-sm font-medium mb-2">Department</h4>
+              <div className="flex flex-wrap gap-1">
+                {uniqueDepartments.map(dept => (
+                  <Badge 
+                    key={dept}
+                    variant={activeFilters.department === dept ? "default" : "outline"} 
+                    className="cursor-pointer"
+                    onClick={() => toggleFilter('department', dept)}
+                  >
+                    {dept}
+                  </Badge>
+                ))}
               </div>
-              
+            </div>
+            
+            {/* Second row - Position and Status filters side by side */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Position Filter */}
               <div>
                 <h4 className="text-sm font-medium mb-2">Position</h4>
                 <div className="flex flex-wrap gap-1">
-                  {uniquePositions.map(position => (
+                  {availablePositions.map(position => (
                     <Badge 
                       key={position}
                       variant={activeFilters.position === position ? "default" : "outline"} 
@@ -376,6 +391,11 @@ const EmployeeList: React.FC = () => {
                       {position}
                     </Badge>
                   ))}
+                  {availablePositions.length === 0 && (
+                    <span className="text-sm text-muted-foreground">
+                      {activeFilters.department ? "No positions found in this department" : "Select a department first"}
+                    </span>
+                  )}
                 </div>
               </div>
               
